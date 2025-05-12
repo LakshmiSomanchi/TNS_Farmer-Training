@@ -23,7 +23,7 @@ st.markdown("""
 
         /* Text Styling */
         body, div, h1, h2, h3, h4, h5, p, span, li {
-            color: white !important;
+            color: #000000 !important;
             font-weight: bold !important;
         }
 
@@ -31,7 +31,7 @@ st.markdown("""
         .header {
             text-align: center;
             font-size: 40px;
-            color: white;
+            color:#153b07 ;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 10px;
