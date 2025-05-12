@@ -1,3 +1,4 @@
+# training.py
 import streamlit as st
 import os
 import json
@@ -72,10 +73,3 @@ else:
                     st.success(f"🎉 Your Score: {score} / {total}")
             else:
                 st.info("No quiz files found.")
-
-# --- Placeholder for Technoserve Logo ---
-st.markdown("""
-    <div style='text-align: center;'>
-        <img src='[TechnoServe_logo.png]' alt='Technoserve Logo' width='200'>
-    </div>
-""", unsafe_allow_html=True)
