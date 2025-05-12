@@ -5,6 +5,43 @@ import time
 from pathlib import Path
 import matplotlib.image as mpimg
 
+# Custom CSS for styling
+st.markdown("""
+    <style>
+        /* Sidebar Styling */
+        [data-testid="stSidebar"] {
+            background-color: #063970;
+        }
+
+        [data-testid="stSidebar"] .css-qrbaxs {
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Text Styling */
+        body, div, h1, h2, h3, h4, h5, p, span, li {
+            color: white !important;
+            font-weight: bold !important;
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            font-size: 40px;
+            color: white;
+            padding: 20px;
+            background-color: #4CAF50;
+            border-radius: 10px;
+        }
+
+        /* Page Background */
+        .stApp {
+            background-color: #1a1a1a;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
 
