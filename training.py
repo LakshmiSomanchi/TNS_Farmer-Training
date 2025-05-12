@@ -102,7 +102,7 @@ if is_admin:
     st.sidebar.header("⚙️ Admin Panel")
     st.sidebar.markdown("Welcome, Admin!")
 
-    # Admin Feature: Upload Content
+    # --- Admin Feature: Upload Content ---
     st.header("📤 Upload Training Content")
     selected_program = st.selectbox("🌟 Select Program", PROGRAMS, key="program_dropdown")
     selected_category = st.selectbox("📂 Select Category", CATEGORIES, key="category_dropdown")
@@ -124,8 +124,28 @@ if is_admin:
                     st.success(f"✅ File '{uploaded_file.name}' uploaded successfully to {save_dir}!")
                 except Exception as e:
                     st.error(f"❌ Error uploading file: {e}")
+
+    # --- Admin Feature: Delete Content ---
+    st.header("🗑️ Delete Training Content")
+    delete_program = st.selectbox("🗂️ Select Program to View Files", PROGRAMS, key="delete_program_dropdown")
+    delete_category = st.selectbox("📂 Select Category to View Files", CATEGORIES, key="delete_category_dropdown")
+    delete_folder_path = Path(BASE_DIR) / delete_program.lower() / delete_category.lower()
+
+    if delete_folder_path.exists() and any(delete_folder_path.iterdir()):
+        delete_files = os.listdir(delete_folder_path)
+        delete_file = st.selectbox("🗑️ Select a File to Delete", delete_files, key="delete_file_dropdown")
+
+        if st.button("Delete File"):
+            try:
+                os.remove(delete_folder_path / delete_file)
+                st.success(f"✅ File '{delete_file}' has been deleted!")
+            except Exception as e:
+                st.error(f"❌ Error deleting file: {e}")
+    else:
+        st.warning(f"No files available in the **{delete_category}** category of the {delete_program} program.")
+
 else:
-    st.warning("You must be an admin to upload training materials.")
+    st.warning("You must be an admin to upload or delete training materials.")
 
 # --- Main Content ---
 st.markdown(f"### 🎓 Program Content Viewer")
