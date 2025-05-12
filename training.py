@@ -21,7 +21,7 @@ st.markdown("""
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
-            background-color: #4caf50; /* Green for nature */
+            background-color: #D1F5D4; /* Green for nature */
         }
 
         [data-testid="stSidebar"] .css-qrbaxs {
