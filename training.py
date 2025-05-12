@@ -4,11 +4,10 @@ import os
 import json
 import time
 from pathlib import Path
-import streamlit as st
 
 # Display the TechnoServe logo using Streamlit
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory as training.py
-st.image(logo_path, caption="TechnoServe Logo", use_column_width=True)
+st.image(logo_path, caption="TechnoServe Logo", width=300)  # Set width to resize the image
 # Config
 st.set_page_config(page_title="Training Platform", layout="wide")
 PROGRAMS = ["cotton", "dairy"]
