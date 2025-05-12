@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 from pathlib import Path
+import json
 
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
@@ -14,6 +15,49 @@ CATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
 for program in PROGRAMS:
     for category in CATEGORIES:
         Path(f"{BASE_DIR}/{program.lower()}/{category.lower()}").mkdir(parents=True, exist_ok=True)
+
+# Custom CSS for agriculture theme
+st.markdown("""
+    <style>
+        /* Sidebar Styling */
+        [data-testid="stSidebar"] {
+            background-color: #4caf50; /* Green for nature */
+        }
+
+        [data-testid="stSidebar"] .css-qrbaxs {
+            color: #ffffff; /* White text for sidebar */
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            font-size: 42px;
+            color: #6B4226; /* Soil Brown */
+            padding: 20px;
+            background-color: #EEE8AA; /* Wheat Color */
+            border-radius: 15px;
+            border: 2px solid #6B4226;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Page Background */
+        .stApp {
+            background-color: #F5F5DC; /* Beige for natural tones */
+        }
+
+        /* Links */
+        a {
+            color: #4caf50; /* Green for links */
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Admin Authentication
 def admin_login():
@@ -66,6 +110,13 @@ else:
     selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES)
 
     # Display Header
+    st.markdown(f"""
+        <div class="header">
+            🌾 Welcome to the TechnoServe Training Platform - {selected_program} Program 🌾
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- Main Content ---
     st.markdown(f"### 📚 {selected_program} - {selected_category} Module")
 
     # Get the folder path for the selected program and category
