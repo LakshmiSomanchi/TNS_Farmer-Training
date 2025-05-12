@@ -76,6 +76,6 @@ else:
 # --- Placeholder for Technoserve Logo ---
 st.markdown("""
     <div style='text-align: center;'>
-        <img src='[TechnoServe_logo.png]' alt='Technoserve Logo' width='200'>
+        <img src='[INSERT_TECHNOSERVE_LOGO_PATH_HERE]' alt='Technoserve Logo' width='200'>
     </div>
 """, unsafe_allow_html=True)
