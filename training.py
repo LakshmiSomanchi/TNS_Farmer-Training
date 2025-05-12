@@ -8,19 +8,16 @@ import matplotlib.image as mpimg
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
 
-# Display the TechnoServe logo
-logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
 # Custom CSS for styling
 st.markdown("""
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
-            background-color: #063970;
+            background-color: #042f5c;
         }
 
         [data-testid="stSidebar"] .css-qrbaxs {
-            color: white;
+            color: #ffffff;
             font-weight: bold;
         }
 
@@ -36,16 +33,20 @@ st.markdown("""
             font-size: 40px;
             color: white;
             padding: 20px;
-            background-color: #4CAF50;
+            background-color: #ffffff;
             border-radius: 10px;
         }
 
         /* Page Background */
         .stApp {
-            background-color: #1a1a1a;
+            background-color: #ffffff;
         }
     </style>
 """, unsafe_allow_html=True)
+
+# Display the TechnoServe logo
+logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
+st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
 
 # Config
 SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
@@ -58,16 +59,6 @@ st.success("Content loaded successfully!")
 
 # --- Header Animation ---
 st.markdown("""
-    <style>
-        .header {
-            text-align: center;
-            font-size: 40px;
-            color: #4CAF50;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-        }
-    </style>
     <div class="header">
         🌾 Welcome to the TechnoServe Training Platform 🌾
     </div>
@@ -75,12 +66,11 @@ st.markdown("""
 
 # --- Sidebar ---
 st.sidebar.header("🔍 Navigation")
-selected_program = st.sidebar.selectbox("📘 Select Training Program", PROGRAMS)
 selected_category = st.sidebar.radio("📂 Select Training Material", SUBCATEGORIES)
-folder_path = Path(MEDIA_FOLDER) / selected_program / selected_category
+folder_path = Path(MEDIA_FOLDER) / selected_category
 
 # --- Main Area ---
-st.markdown(f"### 📚 {selected_program.title()} - {selected_category.title()} Module")
+st.markdown(f"### 📚 {selected_category.title()} Module")
 
 if not folder_path.exists():
     st.warning("No content found for this category.")
@@ -128,39 +118,3 @@ else:
                     st.success(f"🎉 Your Score: {score} / {total}")
             else:
                 st.info("No quiz files found.")
-
-# --- Program Highlights ---
-st.markdown("### 🌟 Training Programs")
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("""
-        <div style="text-align: center;">
-            <h3>📘 Cotton Program</h3>
-            <p>Learn about best practices in cotton farming.</p>
-        </div>
-    """, unsafe_allow_html=True)
-    if st.button("Select Cotton Program", key="cotton"):
-        st.success("Cotton Program selected!")
-
-with col2:
-    st.markdown("""
-        <div style="text-align: center;">
-            <h3>📘 Dairy Program</h3>
-            <p>Explore techniques for improving dairy production.</p>
-        </div>
-    """, unsafe_allow_html=True)
-    if st.button("Select Dairy Program", key="dairy"):
-        st.success("Dairy Program selected!")
-
-# --- Styling and Background ---
-st.markdown("""
-    <style>
-        body {
-            background-color: #fefefe;
-        }
-        h1, h2, h3 {
-            color: #4CAF50;
-        }
-    </style>
-""", unsafe_allow_html=True)
