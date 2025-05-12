@@ -99,7 +99,10 @@ if is_admin:
 else:
     # Display the TechnoServe logo
     logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-    st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
+    if Path(logo_path).exists():
+        st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
+    else:
+        st.warning("Logo file not found. Please ensure 'TechnoServe_logo.png' is in the same directory.")
 
     # --- Sidebar: Program Selection ---
     st.sidebar.header("🎓 Program Selection")
