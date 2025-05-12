@@ -23,7 +23,7 @@ st.markdown("""
 
         /* Text Styling */
         body, div, h1, h2, h3, h4, h5, p, span, li {
-            color: #000000 !important;
+            color:#ffffff  !important;
             font-weight: bold !important;
         }
 
