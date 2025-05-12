@@ -4,19 +4,11 @@ import os
 import json
 import time
 from pathlib import Path
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+import streamlit as st
 
-# Load the TechnoServe logo
-# Load the TechnoServe logo
-logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory or update the path accordingly
-img = mpimg.imread(logo_path)
-
-# Display the logo
-plt.imshow(img)
-plt.axis('off')  # Hide axes
-plt.title("TechnoServe Logo")  # Optional title
-plt.show()
+# Display the TechnoServe logo using Streamlit
+logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory as training.py
+st.image(logo_path, caption="TechnoServe Logo", use_column_width=True)
 # Config
 st.set_page_config(page_title="Training Platform", layout="wide")
 PROGRAMS = ["cotton", "dairy"]
