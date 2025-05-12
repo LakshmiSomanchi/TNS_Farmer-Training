@@ -9,7 +9,7 @@ import matplotlib.image as mpimg
 
 # Load the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory or update the path accordingly
-img = mpimg.imread(logo_path)
+img = mpimg.imread(TechnoServe_logo.png)
 
 # Display the logo
 plt.imshow(img)
