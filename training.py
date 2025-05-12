@@ -7,8 +7,49 @@ import random
 
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
+# Admin Authentication
+def admin_login():
+    """Simple admin login for restricted access"""
+    admin_username = st.text_input("rsomanchi@tns.org", type="default")
+    admin_password = st.text_input("Admin Password", type="password")
+    return admin_username == "admin" and admin_password == "admin123"
 
-# Custom CSS for enhanced styling and pop-ups
+# Check if the user is an admin
+is_admin = admin_login()
+
+if is_admin:
+    st.sidebar.header("⚙️ Admin Panel")
+    st.sidebar.markdown("Welcome, Admin!")
+
+    # Admin Feature 1: Upload Content
+    st.header("📤 Upload Training Content")
+    uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json"])
+    if uploaded_file:
+        save_path = st.text_input("Enter the folder path to save the file:")
+        if st.button("Upload"):
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
+            with open(os.path.join(save_path, uploaded_file.name), "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.success(f"File '{uploaded_file.name}' uploaded successfully to {save_path}!")
+
+    # Admin Feature 2: Monitor Real-Time Activities
+    st.header("📊 Real-Time Monitoring")
+    st.markdown("Here you can track real-time activities of trainers and participants.")
+    if "progress" in st.session_state:
+        st.markdown(f"**Platform Progress**: {st.session_state.progress}%")
+    else:
+        st.markdown("No progress data available.")
+
+    # Add more admin functionalities here
+    st.header("🔧 Additional Admin Tools")
+    st.markdown("These tools are for advanced admin functionalities (e.g., analytics, user management).")
+else:
+    # Restrict access to admin features
+    st.sidebar.error("Admin access required for this section.")
+    st.warning("You do not have access to this section. Please log in as an admin.")
+
+# Custom CSS for enhanced styling with dynamic contrast
 st.markdown("""
     <style>
         /* Sidebar Styling */
