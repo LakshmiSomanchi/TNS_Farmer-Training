@@ -3,196 +3,188 @@ import os
 import json
 import time
 from pathlib import Path
-import random
 
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
 
-# Custom CSS for agriculture/dairy/agri theme
-st.markdown("""
-    <style>
-        /* Sidebar Styling */
-        [data-testid="stSidebar"] {
-            background-color: #4caf50; /* Green for nature */
-        }
+# Admin Authentication
+def admin_login():
+    """Admin login for restricted access."""
+    st.sidebar.subheader("🔒 Admin Login")
+    admin_username = st.sidebar.text_input("Admin Username", type="default")
+    admin_password = st.sidebar.text_input("Admin Password", type="password")
+    if st.sidebar.button("Login"):
+        if admin_username == "admin" and admin_password == "admin123":
+            st.sidebar.success("✅ Login Successful!")
+            return True
+        else:
+            st.sidebar.error("❌ Invalid credentials. Please try again.")
+    return False
 
-        [data-testid="stSidebar"] .css-qrbaxs {
-            color: #ffffff; /* White text for sidebar */
-            font-weight: bold;
-            font-size: 16px;
-        }
+# Check if the user is an admin
+is_admin = admin_login()
 
-        /* Text Styling */
-        body, div, h1, h2, h3, h4, h5, p, span, li {
-            color: #3e2723 !important; /* Dark brown for text (soil tone) */
-            font-family: 'Arial', sans-serif !important; /* Clean Font */
-            line-height: 1.6;
-        }
+# If admin logged in, show admin panel
+if is_admin:
+    st.sidebar.header("⚙️ Admin Panel")
+    st.sidebar.markdown("Welcome, Admin!")
 
-        /* Header Styling */
-        .header {
-            text-align: center;
-            font-size: 42px;
-            color: #ffeb3b; /* Yellow for sunlight */
-            padding: 20px;
-            background-color: #8bc34a; /* Lighter Green for header background */
-            border-radius: 15px;
-            border: 2px solid #4caf50;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    # Admin Feature 1: Upload Content
+    st.header("📤 Upload Training Content")
+    uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json"])
+    if uploaded_file:
+        save_path = st.text_input("Enter the folder path to save the file:", "training_materials/admin_uploads")
+        if st.button("Upload"):
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
+            with open(os.path.join(save_path, uploaded_file.name), "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.success(f"File '{uploaded_file.name}' uploaded successfully to {save_path}!")
 
-        /* Buttons */
-        .stButton>button {
-            background-color: #4caf50; /* Green for buttons */
-            color: #ffffff; /* White text */
-            border-radius: 8px;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
-        .stButton>button:hover {
-            background-color: #388e3c; /* Darker green on hover */
-        }
+    # Admin Feature 2: Monitor Real-Time Activities
+    st.header("📊 Real-Time Monitoring")
+    st.markdown("Here you can track real-time activities of trainers and participants.")
+    if "progress" in st.session_state:
+        st.markdown(f"**Platform Progress**: {st.session_state.progress}%")
+    else:
+        st.markdown("No progress data available.")
 
-        /* Pop-up for Achievements */
-        .popup {
-            position: fixed;
-            bottom: 10%;
-            right: 10%;
-            background-color: #ffeb3b; /* Yellow for achievement notifications */
-            color: #000;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            font-family: 'Arial', sans-serif;
-            font-size: 16px;
-        }
+    # Add more admin functionalities here
+    st.header("🔧 Additional Admin Tools")
+    st.markdown("These tools are for advanced admin functionalities (e.g., analytics, user management).")
 
-        /* Page Background */
-        .stApp {
-            background-color: #f1f8e9; /* Very light green for page background */
-        }
+# If not admin, show training platform
+else:
+    # Display the TechnoServe logo
+    logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
+    st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
 
-        /* Links */
-        a {
-            color: #4caf50; /* Green for links */
-            font-weight: bold;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-""", unsafe_allow_html=True)
+    # --- Agriculture and Dairy Theme ---
+    st.markdown("""
+        <style>
+            /* Sidebar Styling */
+            [data-testid="stSidebar"] {
+                background-color: #8FBC8F; /* Earthy Green */
+            }
 
-# Display the TechnoServe logo
-logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
+            [data-testid="stSidebar"] .css-qrbaxs {
+                color: #FFFFFF; /* White text for sidebar */
+                font-weight: bold;
+                font-size: 16px;
+            }
 
-# --- Sidebar: Gamified Progress and Program Selection ---
-st.sidebar.header("🎓 Program Selection")
-selected_program = st.sidebar.selectbox("🌟 Choose a Program", ["Cotton", "Dairy"])
+            /* Header Styling */
+            .header {
+                text-align: center;
+                font-size: 42px;
+                color: #6B4226; /* Soil Brown */
+                padding: 20px;
+                background-color: #EEE8AA; /* Wheat Color */
+                border-radius: 15px;
+                border: 2px solid #6B4226;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            }
 
-# Progress tracker
-if "progress" not in st.session_state:
-    st.session_state.progress = 0
+            /* Page Background */
+            .stApp {
+                background-color: #F5F5DC; /* Beige for natural tones */
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
-if "badge" not in st.session_state:
-    st.session_state.badge = None
+    # --- Sidebar: Program Selection ---
+    st.sidebar.header("🎓 Program Selection")
+    selected_program = st.sidebar.selectbox("🌟 Choose a Program", ["Cotton", "Dairy"])
 
-# Update subcategories and folder path based on the selected program
-if selected_program == "Cotton":
-    SUBCATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
-    MEDIA_FOLDER = "training_materials/cotton"
-elif selected_program == "Dairy":
-    SUBCATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
-    MEDIA_FOLDER = "training_materials/dairy"
+    # Progress tracker
+    if "progress" not in st.session_state:
+        st.session_state.progress = 0
 
-# --- Sidebar: Training Material Selection ---
-st.sidebar.header("🔍 Navigation")
-selected_category = st.sidebar.radio("📂 Select Training Material", SUBCATEGORIES)
-folder_path = Path(MEDIA_FOLDER) / selected_category.lower()
+    if "badge" not in st.session_state:
+        st.session_state.badge = None
 
-# --- Header Animation ---
-st.markdown(f"""
-    <div class="header">
-        🌾 Welcome to the TechnoServe Training Platform - {selected_program} Program 🌾
-    </div>
-""", unsafe_allow_html=True)
+    # Update subcategories and folder path based on the selected program
+    if selected_program == "Cotton":
+        SUBCATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
+        MEDIA_FOLDER = "training_materials/cotton"
+    elif selected_program == "Dairy":
+        SUBCATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
+        MEDIA_FOLDER = "training_materials/dairy"
 
-# --- Main Area ---
-st.markdown(f"### 📚 {selected_program} - {selected_category} Module")
+    # --- Sidebar: Training Material Selection ---
+    st.sidebar.header("🔍 Navigation")
+    selected_category = st.sidebar.radio("📂 Select Training Material", SUBCATEGORIES)
+    folder_path = Path(MEDIA_FOLDER) / selected_category.lower()
 
-# Gamified pop-up achievement
-if st.session_state.badge:
+    # --- Header Animation ---
     st.markdown(f"""
-        <div class="popup">
-            🎉 Congratulations! You've earned the **{st.session_state.badge}** badge!
+        <div class="header">
+            🌾 Welcome to the TechnoServe Training Platform - {selected_program} Program 🌾
         </div>
     """, unsafe_allow_html=True)
-    time.sleep(3)  # Simulate pop-up display time
-    st.session_state.badge = None
 
-if not folder_path.exists():
-    st.warning(f"No content found for the **{selected_category}** category.")
-else:
-    files = os.listdir(folder_path)
-    if not files:
-        st.info(f"No files available in the **{selected_category}** category.")
+    # --- Main Area ---
+    st.markdown(f"### 📚 {selected_program} - {selected_category} Module")
+
+    if not folder_path.exists():
+        st.warning(f"No content found for the **{selected_category}** category.")
     else:
-        if selected_category == "Presentations":
-            ppt_files = [f for f in files if f.endswith(".pdf")]
-            if ppt_files:
-                selected_ppt = st.selectbox("📑 Select a Presentation:", ppt_files)
-                ppt_path = folder_path / selected_ppt
-                with open(ppt_path, "rb") as f:
-                    st.download_button(label=f"⬇️ Download {selected_ppt}", file_name=selected_ppt, data=f)
-                st.session_state.progress += 10
-            else:
-                st.info("No Presentation files found.")
-
-        elif selected_category == "Videos":
-            for file in files:
-                if file.endswith(".mp4"):
-                    st.video(str(folder_path / file))
+        files = os.listdir(folder_path)
+        if not files:
+            st.info(f"No files available in the **{selected_category}** category.")
+        else:
+            if selected_category == "Presentations":
+                ppt_files = [f for f in files if f.endswith(".pdf")]
+                if ppt_files:
+                    selected_ppt = st.selectbox("📑 Select a Presentation:", ppt_files)
+                    ppt_path = folder_path / selected_ppt
+                    with open(ppt_path, "rb") as f:
+                        st.download_button(label=f"⬇️ Download {selected_ppt}", file_name=selected_ppt, data=f)
                     st.session_state.progress += 10
+                else:
+                    st.info("No Presentation files found.")
 
-        elif selected_category == "Audios":
-            for file in files:
-                if file.endswith(".mp3"):
-                    st.audio(str(folder_path / file))
-                    st.session_state.progress += 10
+            elif selected_category == "Videos":
+                for file in files:
+                    if file.endswith(".mp4"):
+                        st.video(str(folder_path / file))
+                        st.session_state.progress += 10
 
-        elif selected_category == "Quizzes":
-            quiz_files = [f for f in files if f.endswith(".json")]
-            if quiz_files:
-                selected_quiz = st.selectbox("📝 Choose a Quiz:", quiz_files)
-                quiz_path = folder_path / selected_quiz
-                with open(quiz_path, "r") as f:
-                    quiz = json.load(f)
-                    st.subheader(quiz.get("title", "Quiz"))
-                    score = 0
-                    total = len(quiz["questions"])
-                    for i, q in enumerate(quiz["questions"]):
-                        st.markdown(f"**Q{i+1}. {q['question']}**")
-                        selected = st.radio("Select an answer:", q['options'], key=f"q{i}")
-                        if selected == q['answer']:
-                            score += 1
-                    st.progress(score / total)
-                    st.success(f"🎉 Your Score: {score} / {total}")
-                    st.session_state.progress += score * 5
-                    if score / total > 0.8:
-                        st.session_state.badge = "Quiz Master"
-            else:
-                st.info("No quiz files found.")
+            elif selected_category == "Audios":
+                for file in files:
+                    if file.endswith(".mp3"):
+                        st.audio(str(folder_path / file))
+                        st.session_state.progress += 10
 
-# Display progress bar
-st.sidebar.markdown("### 🏆 Your Progress")
-st.sidebar.progress(st.session_state.progress)
+            elif selected_category == "Quizzes":
+                quiz_files = [f for f in files if f.endswith(".json")]
+                if quiz_files:
+                    selected_quiz = st.selectbox("📝 Choose a Quiz:", quiz_files)
+                    quiz_path = folder_path / selected_quiz
+                    with open(quiz_path, "r") as f:
+                        quiz = json.load(f)
+                        st.subheader(quiz.get("title", "Quiz"))
+                        score = 0
+                        total = len(quiz["questions"])
+                        for i, q in enumerate(quiz["questions"]):
+                            st.markdown(f"**Q{i+1}. {q['question']}**")
+                            selected = st.radio("Select an answer:", q['options'], key=f"q{i}")
+                            if selected == q['answer']:
+                                score += 1
+                        st.progress(score / total)
+                        st.success(f"🎉 Your Score: {score} / {total}")
+                        st.session_state.progress += score * 5
+                        if score / total > 0.8:
+                            st.session_state.badge = "Quiz Master"
+                else:
+                    st.info("No quiz files found.")
 
-# Display badges earned
-if st.session_state.progress >= 50:
-    st.sidebar.success("🎖 You’ve unlocked the **Intermediate Farmer** badge!")
-if st.session_state.progress >= 100:
-    st.sidebar.success("🎖 You’ve unlocked the **Master Farmer** badge!")
+    # Display progress bar
+    st.sidebar.markdown("### 🏆 Your Progress")
+    st.sidebar.progress(st.session_state.progress)
+
+    # Display badges earned
+    if st.session_state.progress >= 50:
+        st.sidebar.success("🎖 You’ve unlocked the **Intermediate Farmer** badge!")
+    if st.session_state.progress >= 100:
+        st.sidebar.success("🎖 You’ve unlocked the **Master Farmer** badge!")
