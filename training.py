@@ -77,8 +77,8 @@ def admin_login():
 is_admin = admin_login()
 
 if is_admin:
-st.sidebar.header("⚙️ Admin Panel")
-st.sidebar.markdown("Welcome, Admin!")
+   st.sidebar.header("⚙️ Admin Panel")
+   st.sidebar.markdown("Welcome, Admin!")
 
 # Admin Feature: Upload Content
 st.header("📤 Upload Training Content")
