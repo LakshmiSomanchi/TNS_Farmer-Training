@@ -43,33 +43,37 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
 # Display the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
 st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
 
-# Config
-SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
-MEDIA_FOLDER = "training_materials"
+# --- Sidebar: Program Selection ---
+st.sidebar.header("🎓 Program Selection")
+selected_program = st.sidebar.selectbox("🌟 Choose a Program", ["Cotton", "Dairy"])
 
-# Add a loading spinner
-with st.spinner("Loading..."):
-    time.sleep(2)  # Simulate loading time
-st.success("Content loaded successfully!")
+# Update subcategories and folder path based on the selected program
+if selected_program == "Cotton":
+    SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
+    MEDIA_FOLDER = "training_materials/cotton"
+elif selected_program == "Dairy":
+    SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
+    MEDIA_FOLDER = "training_materials/dairy"
 
-# --- Header Animation ---
-st.markdown("""
-    <div class="header">
-        🌾 Welcome to the TechnoServe Training Platform 🌾
-    </div>
-""", unsafe_allow_html=True)
-
-# --- Sidebar ---
+# --- Sidebar: Training Material Selection ---
 st.sidebar.header("🔍 Navigation")
 selected_category = st.sidebar.radio("📂 Select Training Material", SUBCATEGORIES)
 folder_path = Path(MEDIA_FOLDER) / selected_category
 
+# --- Header Animation ---
+st.markdown(f"""
+    <div class="header">
+        🌾 Welcome to the TechnoServe Training Platform - {selected_program} Program 🌾
+    </div>
+""", unsafe_allow_html=True)
+
 # --- Main Area ---
-st.markdown(f"### 📚 {selected_category.title()} Module")
+st.markdown(f"### 📚 {selected_program} - {selected_category.title()} Module")
 
 if not folder_path.exists():
     st.warning("No content found for this category.")
