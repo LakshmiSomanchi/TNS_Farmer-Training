@@ -5,6 +5,12 @@ import time
 from pathlib import Path
 import matplotlib.image as mpimg
 
+# Set the Streamlit page configuration
+st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
+
+# Display the TechnoServe logo
+logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
+st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
 # Custom CSS for styling
 st.markdown("""
     <style>
@@ -41,16 +47,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
-# Set the Streamlit page configuration
-st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
-
-# Display the TechnoServe logo
-logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
-
 # Config
-PROGRAMS = ["cotton", "dairy"]
 SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
 MEDIA_FOLDER = "training_materials"
 
