@@ -12,7 +12,7 @@ import matplotlib.image as mpimg
 
 # Display the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-st.image(logo_path, caption="TechnoServe Logo", width=300)  # Adjust width if needed
+st.image(logo_path, width=250)  # Adjust width if needed
 
 # Config
 PROGRAMS = ["cotton", "dairy"]
