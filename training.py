@@ -23,13 +23,11 @@ st.markdown("""
         [data-testid="stSidebar"] {
             background-color: #D1F5D4; /* Green for nature */
         }
-
         [data-testid="stSidebar"] .css-qrbaxs {
             color: #ffffff; /* White text for sidebar */
             font-weight: bold;
             font-size: 16px;
         }
-
         /* Header Styling */
         .header {
             text-align: center;
@@ -41,12 +39,10 @@ st.markdown("""
             border: 2px solid #6B4226;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         /* Page Background */
         .stApp {
             background-color: #F5F5DC; /* Beige for natural tones */
         }
-
         /* Links */
         a {
             color: #4caf50; /* Green for links */
@@ -73,57 +69,61 @@ def admin_login():
             st.sidebar.error("❌ Invalid credentials. Please try again.")
     return False
 
+# File type validation based on category
+def is_valid_file(file_name, category):
+    valid_extensions = {
+        "Presentations": [".pptx"],
+        "Videos": [".mp4"],
+        "Audios": [".mp3"],
+        "Quizzes": [".xlsx", ".png", ".jpg", ".jpeg"]
+    }
+    # Allow Excel and Images in all categories
+    extra_extensions = [".xlsx", ".png", ".jpg", ".jpeg"]
+    file_extension = os.path.splitext(file_name)[1].lower()
+
+    if file_extension in extra_extensions:
+        return True
+    if category in valid_extensions and file_extension in valid_extensions[category]:
+        return True
+    return False
+
 # Check if the user is an admin
 is_admin = admin_login()
 
 if is_admin:
-   st.sidebar.header("⚙️ Admin Panel")
-   st.sidebar.markdown("Welcome, Admin!")
+    st.sidebar.header("⚙️ Admin Panel")
+    st.sidebar.markdown("Welcome, Admin!")
 
-# Admin Feature: Upload Content
-st.header("📤 Upload Training Content")
-selected_program = st.selectbox("🌟 Select Program", PROGRAMS)
-selected_category = st.selectbox("📂 Select Category", CATEGORIES)
-uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json", "pptx"])
+    # Admin Feature: Upload Content
+    st.header("📤 Upload Training Content")
+    selected_program = st.selectbox("🌟 Select Program", PROGRAMS)
+    selected_category = st.selectbox("📂 Select Category", CATEGORIES)
+    uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json", "pptx", "xlsx", "png", "jpg", "jpeg"])
 
-if uploaded_file:
-    save_dir = f"{BASE_DIR}/{selected_program.lower()}/{selected_category.lower()}"
-    Path(save_dir).mkdir(parents=True, exist_ok=True)  # Ensure directory exists
-    file_path = os.path.join(save_dir, uploaded_file.name)
+    if uploaded_file:
+        save_dir = f"{BASE_DIR}/{selected_program.lower()}/{selected_category.lower()}"
+        Path(save_dir).mkdir(parents=True, exist_ok=True)  # Ensure directory exists
+        file_path = os.path.join(save_dir, uploaded_file.name)
 
-    if st.button("Upload"):
-        try:
-            with open(file_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
-            st.success(f"File '{uploaded_file.name}' uploaded successfully to {save_dir}!")
-        except Exception as e:
-            st.error(f"Error uploading file: {e}")
-
+        # Validate file type
+        if not is_valid_file(uploaded_file.name, selected_category):
+            st.error(f"❌ Invalid file type for the **{selected_category}** category.")
+        else:
+            if st.button("Upload"):
+                try:
+                    with open(file_path, "wb") as f:
+                        f.write(uploaded_file.getbuffer())
+                    st.success(f"✅ File '{uploaded_file.name}' uploaded successfully to {save_dir}!")
+                except Exception as e:
+                    st.error(f"❌ Error uploading file: {e}")
 else:
-    # Display the TechnoServe logo
-    logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-    if Path(logo_path).exists():
-        st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
-    else:
-        st.warning("Logo file not found. Please ensure 'TechnoServe_logo.png' is in the same directory.")
-
-    # --- Sidebar: Program Selection ---
-    st.sidebar.header("🎓 Program Selection")
-    selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS)
-
-    # --- Sidebar: Training Material Selection ---
-    st.sidebar.header("🔍 Navigation")
-    selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES)
-
-    # Display Header
-    st.markdown(f"""
-        <div class="header">
-            🌾 Welcome to the TechnoServe Training Platform - {selected_program} Program 🌾
-        </div>
-    """, unsafe_allow_html=True)
+    st.warning("You must be an admin to upload training materials.")
 
 # --- Main Content ---
-st.markdown(f"### 📚 {selected_program} - {selected_category} Module")
+st.markdown(f"### 🎓 Program Content Viewer")
+
+selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS)
+selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES)
 
 # Get the folder path for the selected program and category
 folder_path = Path(BASE_DIR) / selected_program.lower() / selected_category.lower()
@@ -149,6 +149,9 @@ else:
             st.markdown(f"📝 **{file}** (Quiz File)")
             with open(file_path, "r") as f:
                 st.json(json.load(f))
+        elif file.endswith((".png", ".jpg", ".jpeg")):
+            st.markdown(f"🖼️ **{file}**")
+            st.image(str(file_path))
         elif file.endswith(".pptx"):
             st.markdown(f"📑 **{file} (PPTX)**")
             with open(file_path, "rb") as f:
