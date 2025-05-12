@@ -1,11 +1,19 @@
 import streamlit as st
 import os
 from pathlib import Path
-from pptx import Presentation
-import time
 
 # Set the Streamlit page configuration
 st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
+
+# Define the base directory for training materials
+BASE_DIR = "training_materials"
+PROGRAMS = ["Cotton", "Dairy"]
+CATEGORIES = ["Presentations", "Videos", "Audios", "Quizzes"]
+
+# Ensure the directory structure exists
+for program in PROGRAMS:
+    for category in CATEGORIES:
+        Path(f"{BASE_DIR}/{program.lower()}/{category.lower()}").mkdir(parents=True, exist_ok=True)
 
 # Admin Authentication
 def admin_login():
@@ -24,57 +32,67 @@ def admin_login():
 # Check if the user is an admin
 is_admin = admin_login()
 
-# Directory for uploaded content
-UPLOAD_DIR = "training_materials/admin_uploads"
-Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
-
 if is_admin:
     st.sidebar.header("⚙️ Admin Panel")
     st.sidebar.markdown("Welcome, Admin!")
 
-    # Admin Feature 1: Upload Content
+    # Admin Feature: Upload Content
     st.header("📤 Upload Training Content")
-    uploaded_file = st.file_uploader("Choose a file to upload (PDF, MP4, MP3, JSON, PPTX)", type=["pdf", "mp4", "mp3", "json", "pptx"])
+    selected_program = st.selectbox("🌟 Select Program", PROGRAMS)
+    selected_category = st.selectbox("📂 Select Category", CATEGORIES)
+    uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json", "pptx"])
+
     if uploaded_file:
-        save_path = st.text_input("Enter the folder path to save the file:", UPLOAD_DIR)
+        save_dir = f"{BASE_DIR}/{selected_program.lower()}/{selected_category.lower()}"
+        Path(save_dir).mkdir(parents=True, exist_ok=True)
+        file_path = os.path.join(save_dir, uploaded_file.name)
+
         if st.button("Upload"):
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            file_path = os.path.join(save_path, uploaded_file.name)
             with open(file_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
-            st.success(f"File '{uploaded_file.name}' uploaded successfully to {save_path}!")
-            if uploaded_file.name.endswith(".pptx"):
-                st.info("Converting PPTX to PDF...")
-                convert_ppt_to_pdf(file_path, save_path)
-                st.success(f"PPTX file '{uploaded_file.name}' converted to PDF and saved in {save_path}!")
-
-    # Admin Feature 2: View Uploaded Content
-    st.header("📂 Manage Uploaded Content")
-    uploaded_files = os.listdir(UPLOAD_DIR)
-    if uploaded_files:
-        st.markdown(f"**Uploaded Files in `{UPLOAD_DIR}`:**")
-        for file in uploaded_files:
-            file_path = os.path.join(UPLOAD_DIR, file)
-            st.markdown(f"- {file}")
-            if st.button(f"Delete {file}", key=file):
-                os.remove(file_path)
-                st.warning(f"{file} has been deleted.")
-    else:
-        st.info("No uploaded content available.")
+            st.success(f"File '{uploaded_file.name}' uploaded successfully to {save_dir}!")
 
 else:
     # Display the TechnoServe logo
     logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
     st.image(logo_path, caption="Empowering Farmers Worldwide", width=250)
 
-    # Sidebar and user functionality goes here...
-    st.warning("This section is only accessible to admin users.")
-    
-# Function to convert PPTX to PDF (simplified placeholder)
-def convert_ppt_to_pdf(pptx_path, save_dir):
-    pdf_file_path = os.path.join(save_dir, Path(pptx_path).stem + ".pdf")
-    # Placeholder: Add actual conversion logic here (e.g., using external tools like LibreOffice)
-    with open(pdf_file_path, "w") as f:
-        f.write(f"Converted content of {pptx_path}")
-    st.info(f"Converted PDF saved at {pdf_file_path}")
+    # --- Sidebar: Program Selection ---
+    st.sidebar.header("🎓 Program Selection")
+    selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS)
+
+    # --- Sidebar: Training Material Selection ---
+    st.sidebar.header("🔍 Navigation")
+    selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES)
+
+    # Display Header
+    st.markdown(f"### 📚 {selected_program} - {selected_category} Module")
+
+    # Get the folder path for the selected program and category
+    folder_path = Path(BASE_DIR) / selected_program.lower() / selected_category.lower()
+
+    # Check if the folder exists and display its contents
+    if not folder_path.exists() or not any(folder_path.iterdir()):
+        st.warning(f"No content available for the **{selected_category}** category in the {selected_program} program.")
+    else:
+        files = os.listdir(folder_path)
+        for file in files:
+            file_path = folder_path / file
+            if file.endswith(".pdf"):
+                st.markdown(f"📄 **{file}**")
+                with open(file_path, "rb") as f:
+                    st.download_button(label=f"⬇️ Download {file}", data=f, file_name=file)
+            elif file.endswith(".mp4"):
+                st.markdown(f"🎥 **{file}**")
+                st.video(str(file_path))
+            elif file.endswith(".mp3"):
+                st.markdown(f"🎵 **{file}**")
+                st.audio(str(file_path))
+            elif file.endswith(".json"):
+                st.markdown(f"📝 **{file}** (Quiz File)")
+                with open(file_path, "r") as f:
+                    st.json(json.load(f))
+            elif file.endswith(".pptx"):
+                st.markdown(f"📑 **{file} (PPTX)**")
+                with open(file_path, "rb") as f:
+                    st.download_button(label=f"⬇️ Download {file}", data=f, file_name=file)
