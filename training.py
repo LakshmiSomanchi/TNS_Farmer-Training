@@ -1,4 +1,3 @@
-# training.py
 import streamlit as st
 import os
 import json
@@ -46,14 +45,20 @@ else:
                 st.info("No PPT files found.")
 
         elif selected_category == "video":
-            for file in files:
-                if file.endswith(".mp4"):
-                    st.video(str(folder_path / file))
+            video_files = [f for f in files if f.endswith(".mp4")]
+            if video_files:
+                selected_video = st.selectbox("🎥 Select a Video:", video_files)
+                st.video(str(folder_path / selected_video))
+            else:
+                st.info("No video files found.")
 
         elif selected_category == "audio":
-            for file in files:
-                if file.endswith(".mp3"):
-                    st.audio(str(folder_path / file))
+            audio_files = [f for f in files if f.endswith(".mp3")]
+            if audio_files:
+                selected_audio = st.selectbox("🎵 Select an Audio File:", audio_files)
+                st.audio(str(folder_path / selected_audio))
+            else:
+                st.info("No audio files found.")
 
         elif selected_category == "quiz":
             quiz_files = [f for f in files if f.endswith(".json")]
