@@ -13,58 +13,8 @@ MEDIA_FOLDER = "training_materials"
 # --- Header Animation ---
 with st.container():
     st.markdown("""
-        <style>
-            .header {
-                text-align: center;
-                color: #4CAF50;
-                font-size: 36px;
-                margin-bottom: 10px;
-                animation: fadeIn 2s;
-            }
-            .intro {
-                text-align: center;
-                font-size: 18px;
-                color: #555;
-                animation: fadeIn 2s;
-            }
-            .logo {
-                display: block;
-                margin: 0 auto;
-                width: 200px; /* Adjust logo size */
-                animation: bounce 2s infinite;
-            }
-            .program-panel {
-                border: 2px solid #4CAF50;
-                border-radius: 10px;
-                padding: 20px;
-                margin: 10px;
-                text-align: center;
-                background-color: #f9f9f9;
-                transition: transform 0.2s, box-shadow 0.2s;
-                animation: slideIn 0.5s forwards;
-                opacity: 0;
-            }
-            .program-panel:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            @keyframes bounce {
-                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-                40% { transform: translateY(-20px); }
-                60% { transform: translateY(-10px); }
-            }
-            @keyframes slideIn {
-                from { transform: translateY(20px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-        </style>
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/TechnoServe_logo.svg/1200px-TechnoServe_logo.svg.png" class="logo" alt="Technoserve Logo">
-        <h1 class="header">🌾 Welcome to the Interactive Training Platform 🌾</h1>
-        <p class="intro">This training module is designed for farmers to enhance their skills and knowledge. Choose your program and training module to get started!</p>
+        <h1 style='text-align: center; color: #4CAF50;'>🌾 Welcome to the Interactive Training Platform 🌾</h1>
+        <p style='text-align: center; font-size: 18px;'>Choose your program and training module to get started!</p>
     """, unsafe_allow_html=True)
     time.sleep(0.5)
 
@@ -95,20 +45,14 @@ else:
                 st.info("No PPT files found.")
 
         elif selected_category == "video":
-            video_files = [f for f in files if f.endswith(".mp4")]
-            if video_files:
-                selected_video = st.selectbox("🎥 Select a Video:", video_files)
-                st.video(str(folder_path / selected_video))
-            else:
-                st.info("No video files found.")
+            for file in files:
+                if file.endswith(".mp4"):
+                    st.video(str(folder_path / file))
 
         elif selected_category == "audio":
-            audio_files = [f for f in files if f.endswith(".mp3")]
-            if audio_files:
-                selected_audio = st.selectbox("🎵 Select an Audio File:", audio_files)
-                st.audio(str(folder_path / selected_audio))
-            else:
-                st.info("No audio files found.")
+            for file in files:
+                if file.endswith(".mp3"):
+                    st.audio(str(folder_path / file))
 
         elif selected_category == "quiz":
             quiz_files = [f for f in files if f.endswith(".json")]
@@ -129,9 +73,9 @@ else:
             else:
                 st.info("No quiz files found.")
 
-# --- Add Animated Farmers ---
+# --- Placeholder for Technoserve Logo ---
 st.markdown("""
     <div style='text-align: center;'>
-        <img src='https://media.giphy.com/media/3o7buirY1g1g1g1g1g/giphy.gif' alt='Animated Farmers' width='300'>
+        <img src='[TechnoServe_logo.png]' alt='Technoserve Logo' width='200'>
     </div>
 """, unsafe_allow_html=True)
