@@ -3,12 +3,17 @@ import os
 import json
 import time
 from pathlib import Path
+import time
+import plotly.express as px
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+with st.spinner("Loading..."):
+    time.sleep(2)  # Simulate loading time
+st.success("Content loaded successfully!")
 
 # Set the Streamlit page configuration
 st.set_page_config(page_title="Training Platform", layout="wide")
-
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
 # Display the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
@@ -19,18 +24,35 @@ PROGRAMS = ["cotton", "dairy"]
 SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
 MEDIA_FOLDER = "training_materials"
 
+# Example chart (replace with your data)
+data = px.data.gapminder()
+fig = px.scatter(data, x="gdpPercap", y="lifeExp", color="continent", 
+                 size="pop", hover_name="country", log_x=True, size_max=60)
+st.plotly_chart(fig)
+
 # --- Header Animation ---
 with st.container():
-    st.markdown("""
-        <h1 style='text-align: center; color: #4CAF50;'>🌾 Welcome to the Interactive Training Platform 🌾</h1>
-        <p style='text-align: center; font-size: 18px;'>Choose your program and training module to get started!</p>
-    """, unsafe_allow_html=True)
+st.markdown("""
+    <style>
+        .header {
+            text-align: center;
+            font-size: 40px;
+            color: #4CAF50;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+    </style>
+    <div class="header">
+        🌾 Welcome to the TechnoServe Training Platform 🌾
+    </div>
+""", unsafe_allow_html=True)
     time.sleep(0.5)
 
 # --- Sidebar ---
 st.sidebar.header("🔍 Navigation")
-selected_program = st.sidebar.selectbox("📘 Select Program", PROGRAMS)
-selected_category = st.sidebar.radio("📂 Select Category", SUBCATEGORIES)
+selected_program = st.sidebar.selectbox("📘 Select Training Program", PROGRAMS)
+selected_category = st.sidebar.radio("📂 Select Training Material", SUBCATEGORIES)
 folder_path = Path(MEDIA_FOLDER) / selected_program / selected_category
 
 # --- Main Area ---
@@ -81,3 +103,63 @@ else:
                     st.success(f"🎉 Your Score: {score} / {total}")
             else:
                 st.info("No quiz files found.")
+                st.markdown("### Training Programs")
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+        <div style="text-align: center;">
+            <h3>📘 Cotton Program</h3>
+            <p>Learn about best practices in cotton farming.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    if st.button("Select Cotton Program", key="cotton"):
+        st.success("Cotton Program selected!")
+
+with col2:
+    st.markdown("""
+        <div style="text-align: center;">
+            <h3>📘 Dairy Program</h3>
+            <p>Explore techniques for improving dairy production.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    if st.button("Select Dairy Program", key="dairy"):
+        st.success("Dairy Program selected!")
+
+st.markdown("""
+    <style>
+        body {
+            background-color: #fefefe;
+        }
+        h1, h2, h3 {
+            color: #4CAF50;
+        }
+    </style>
+""", unsafe_allow_html=True)
+st.markdown("## Quiz Time 📝")
+quiz_files = [f for f in os.listdir(folder_path) if f.endswith(".json")]
+
+if quiz_files:
+    selected_quiz = st.selectbox("Choose a quiz:", quiz_files)
+    with open(folder_path / selected_quiz, "r") as f:
+        quiz = json.load(f)
+    
+    score = 0
+    total = len(quiz["questions"])
+    
+    for i, q in enumerate(quiz["questions"]):
+        st.markdown(f"**Q{i+1}. {q['question']}**")
+        selected = st.radio("Select an answer:", q['options'], key=f"q{i}")
+        if selected == q['answer']:
+            score += 1
+    
+    st.progress(score / total)
+    st.success(f"🎉 Your Score: {score} / {total}")
+        
+if selected_category == "ppt":
+    ppt_files = [f for f in os.listdir(folder_path) if f.endswith(".pdf")]
+    if ppt_files:
+        for ppt in ppt_files:
+            st.markdown(f"📄 **{ppt}**")
+            with open(folder_path / ppt, "rb") as f:
+                st.download_button(f"⬇️ Download {ppt}", file_name=ppt, data=f)
