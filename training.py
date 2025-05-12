@@ -55,15 +55,23 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Admin Authentication
+# Admin Authentication with Session State
+if "is_admin" not in st.session_state:
+    st.session_state.is_admin = False  # Initialize admin state
+
 def admin_login():
     """Admin login for restricted access."""
+    if st.session_state.is_admin:
+        st.sidebar.success("✅ You are logged in as Admin.")
+        return True
+
     st.sidebar.subheader("🔒 Admin Login")
-    admin_username = st.sidebar.text_input("Admin Username", type="default")
-    admin_password = st.sidebar.text_input("Admin Password", type="password")
+    admin_username = st.sidebar.text_input("Admin Username", type="default", key="admin_username")
+    admin_password = st.sidebar.text_input("Admin Password", type="password", key="admin_password")
     if st.sidebar.button("Login"):
         if admin_username == "admin" and admin_password == "admin123":
             st.sidebar.success("✅ Login Successful!")
+            st.session_state.is_admin = True
             return True
         else:
             st.sidebar.error("❌ Invalid credentials. Please try again.")
@@ -96,8 +104,8 @@ if is_admin:
 
     # Admin Feature: Upload Content
     st.header("📤 Upload Training Content")
-    selected_program = st.selectbox("🌟 Select Program", PROGRAMS)
-    selected_category = st.selectbox("📂 Select Category", CATEGORIES)
+    selected_program = st.selectbox("🌟 Select Program", PROGRAMS, key="program_dropdown")
+    selected_category = st.selectbox("📂 Select Category", CATEGORIES, key="category_dropdown")
     uploaded_file = st.file_uploader("Choose a file to upload", type=["pdf", "mp4", "mp3", "json", "pptx", "xlsx", "png", "jpg", "jpeg"])
 
     if uploaded_file:
@@ -122,8 +130,8 @@ else:
 # --- Main Content ---
 st.markdown(f"### 🎓 Program Content Viewer")
 
-selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS)
-selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES)
+selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS, key="view_program_dropdown")
+selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES, key="view_category_radio")
 
 # Get the folder path for the selected program and category
 folder_path = Path(BASE_DIR) / selected_program.lower() / selected_category.lower()
