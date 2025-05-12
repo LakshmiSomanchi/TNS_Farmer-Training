@@ -3,35 +3,28 @@ import os
 import json
 import time
 from pathlib import Path
-import time
 import plotly.express as px
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-with st.spinner("Loading..."):
-    time.sleep(2)  # Simulate loading time
-st.success("Content loaded successfully!")
-
 # Set the Streamlit page configuration
-st.set_page_config(page_title="Training Platform", layout="wide")
+st.set_page_config(page_title="TechnoServe Training Platform", layout="wide")
 
 # Display the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
-st.image(logo_path, width=250)  # Adjust width if needed
+st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
 
 # Config
 PROGRAMS = ["cotton", "dairy"]
 SUBCATEGORIES = ["ppt", "video", "audio", "quiz"]
 MEDIA_FOLDER = "training_materials"
 
-# Example chart (replace with your data)
-data = px.data.gapminder()
-fig = px.scatter(data, x="gdpPercap", y="lifeExp", color="continent", 
-                 size="pop", hover_name="country", log_x=True, size_max=60)
-st.plotly_chart(fig)
+# Add a loading spinner
+with st.spinner("Loading..."):
+    time.sleep(2)  # Simulate loading time
+st.success("Content loaded successfully!")
 
 # --- Header Animation ---
-with st.container():
 st.markdown("""
     <style>
         .header {
@@ -47,7 +40,6 @@ st.markdown("""
         🌾 Welcome to the TechnoServe Training Platform 🌾
     </div>
 """, unsafe_allow_html=True)
-    time.sleep(0.5)
 
 # --- Sidebar ---
 st.sidebar.header("🔍 Navigation")
@@ -100,10 +92,20 @@ else:
                         selected = st.radio("Select an answer:", q['options'], key=f"q{i}")
                         if selected == q['answer']:
                             score += 1
+                    st.progress(score / total)
                     st.success(f"🎉 Your Score: {score} / {total}")
             else:
                 st.info("No quiz files found.")
-                st.markdown("### Training Programs")
+
+# --- Example Chart ---
+st.markdown("### 📊 Example Interactive Chart")
+data = px.data.gapminder()
+fig = px.scatter(data, x="gdpPercap", y="lifeExp", color="continent", 
+                 size="pop", hover_name="country", log_x=True, size_max=60)
+st.plotly_chart(fig)
+
+# --- Program Highlights ---
+st.markdown("### 🌟 Training Programs")
 col1, col2 = st.columns(2)
 
 with col1:
@@ -126,6 +128,7 @@ with col2:
     if st.button("Select Dairy Program", key="dairy"):
         st.success("Dairy Program selected!")
 
+# --- Styling and Background ---
 st.markdown("""
     <style>
         body {
@@ -136,30 +139,3 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-st.markdown("## Quiz Time 📝")
-quiz_files = [f for f in os.listdir(folder_path) if f.endswith(".json")]
-
-if quiz_files:
-    selected_quiz = st.selectbox("Choose a quiz:", quiz_files)
-    with open(folder_path / selected_quiz, "r") as f:
-        quiz = json.load(f)
-    
-    score = 0
-    total = len(quiz["questions"])
-    
-    for i, q in enumerate(quiz["questions"]):
-        st.markdown(f"**Q{i+1}. {q['question']}**")
-        selected = st.radio("Select an answer:", q['options'], key=f"q{i}")
-        if selected == q['answer']:
-            score += 1
-    
-    st.progress(score / total)
-    st.success(f"🎉 Your Score: {score} / {total}")
-        
-if selected_category == "ppt":
-    ppt_files = [f for f in os.listdir(folder_path) if f.endswith(".pdf")]
-    if ppt_files:
-        for ppt in ppt_files:
-            st.markdown(f"📄 **{ppt}**")
-            with open(folder_path / ppt, "rb") as f:
-                st.download_button(f"⬇️ Download {ppt}", file_name=ppt, data=f)
