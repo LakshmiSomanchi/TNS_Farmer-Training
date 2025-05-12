@@ -3,8 +3,6 @@ import os
 import json
 import time
 from pathlib import Path
-import plotly.express as px
-import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 # Set the Streamlit page configuration
@@ -96,13 +94,6 @@ else:
                     st.success(f"🎉 Your Score: {score} / {total}")
             else:
                 st.info("No quiz files found.")
-
-# --- Example Chart ---
-st.markdown("### 📊 Example Interactive Chart")
-data = px.data.gapminder()
-fig = px.scatter(data, x="gdpPercap", y="lifeExp", color="continent", 
-                 size="pop", hover_name="country", log_x=True, size_max=60)
-st.plotly_chart(fig)
 
 # --- Program Highlights ---
 st.markdown("### 🌟 Training Programs")
