@@ -13,17 +13,17 @@ st.markdown("""
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
-            background-color: #042f5c;
+            background-color: #042f5c; /* Background color for the sidebar */
         }
 
         [data-testid="stSidebar"] .css-qrbaxs {
-            color: #ffffff;
+            color: #ffffff; /* White text color for the sidebar */
             font-weight: bold;
         }
 
         /* Text Styling */
         body, div, h1, h2, h3, h4, h5, p, span, li {
-            color:#ffffff  !important;
+            color: #000000 !important; /* Black text color for the main content */
             font-weight: bold !important;
         }
 
@@ -31,19 +31,18 @@ st.markdown("""
         .header {
             text-align: center;
             font-size: 40px;
-            color:#153b07 ;
+            color: #556b2f; /* Dark olive green for headings */
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #ffffff; /* White background for the header */
             border-radius: 10px;
         }
 
         /* Page Background */
         .stApp {
-            background-color: #ffffff;
+            background-color: #ffffff; /* White background for the main page */
         }
     </style>
 """, unsafe_allow_html=True)
-
 # Display the TechnoServe logo
 logo_path = "TechnoServe_logo.png"  # Ensure the file is in the same directory
 st.image(logo_path, caption="TechnoServe Logo", width=250)  # Adjust width if needed
