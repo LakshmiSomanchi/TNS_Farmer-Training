@@ -148,7 +148,27 @@ else:
     st.warning("You must be an admin to upload or delete training materials.")
 
 # --- Main Content ---
-st.markdown(f"### 🎓 Program Content Viewer")
+# Add a Gamified Header for the Main Page
+st.markdown("""
+<div class="header">
+    🌾 <span style="font-weight: bold;">Farmer Training Program</span> 🌾
+</div>
+""", unsafe_allow_html=True)
+
+# Add Interactive Gamification Elements
+st.markdown("### 🎮 Level Up Your Farming Skills!")
+st.markdown("""
+    <p>Welcome to the Farmer Training Program! Complete tasks, learn new skills, and earn rewards to become a <b>Master Farmer</b>.</p>
+    <ul>
+        <li>📚 Access training materials</li>
+        <li>🎯 Complete quizzes</li>
+        <li>🏆 Earn badges</li>
+    </ul>
+""", unsafe_allow_html=True)
+
+# Add a Button for a Gamified Start
+if st.button("🌟 Start Your Journey"):
+    st.success("🎉 You're on your way to becoming a Master Farmer! Explore the training materials below.")
 
 selected_program = st.sidebar.selectbox("🌟 Choose a Program", PROGRAMS, key="view_program_dropdown")
 selected_category = st.sidebar.radio("📂 Select Training Material", CATEGORIES, key="view_category_radio")
